@@ -1,0 +1,80 @@
+import time
+import os
+import pyautogui
+from tkinter import simpledialog
+import tkinter.messagebox
+
+
+class ProbeAction:
+
+    def __init__(self):
+        print('Probe Class Created')
+
+    @staticmethod
+    def logon_to_telnet(controller):
+        time.sleep(0.2)
+        print(f'controller is set to:{controller}')
+        if controller == 'DC':
+            os.startfile("C:\\Users\\Public\\Desktop\\DesktopFDC\\Controller.lnk")
+        if controller == 'CC':
+            os.startfile("C:/servicedea/hyperterminal/ShortcutCOM1")
+        if controller == "CC_Hyper":
+            os.startfile("C:/servicedea/hyperterminal/CC_Hyper")
+        time.sleep(0.5)
+        pyautogui.hotkey('ctrl', 'e')
+        time.sleep(0.1)
+        pyautogui.hotkey('ctrl', 'c')
+        time.sleep(0.1)
+        pyautogui.hotkey('ctrl', 'b')
+        time.sleep(0.1)
+        pyautogui.hotkey('enter')
+        time.sleep(0.1)
+        pyautogui.hotkey('ctrl', 'e')
+        time.sleep(0.1)
+        pyautogui.hotkey('ctrl', 'c')
+        time.sleep(0.1)
+        pyautogui.hotkey('ctrl', 'b')
+        time.sleep(0.1)
+
+    @staticmethod
+    def rotate_probe_head(a_angle, b_angle, controller):
+        rot_head = tkinter.messagebox.askyesno("Rotate Head Command", f"Are you sure you want to rotate the head to "
+                                                                      f"A{a_angle}, B{b_angle}?")
+        if rot_head:
+            print('probe head action recieved')
+            ProbeAction.logon_to_telnet(controller)
+            pyautogui.write('prbhty ph9,' + str(a_angle) + ',' + str(b_angle), interval=0.05)
+            pyautogui.hotkey('enter')
+            time.sleep(5.0)
+            pyautogui.hotkey('alt', 'f4')
+            pyautogui.hotkey('enter')
+
+    @staticmethod
+    def run_probe_head_test_seq(controller):
+        rot_head = tkinter.messagebox.askyesno("Rotate Head Command", "Are you sure you want to run probe head test "
+                                                                      "sequence?\nAngles of:\nA0B0,\nA30+-B30,"
+                                                                      "\nA30+-B150, "
+                                                                      "\nA90+-B90,\nA90B0,\nA90,B180.")
+        if rot_head:
+            angles = (
+                ("0", "0"),
+                ("30", "30"),
+                ("30", "150"),
+                ("30", "-150"),
+                ("30", "-30"),
+                ("90", "-90"),
+                ("90", "90"),
+                ("90", "180"),
+                ("90", "0"),
+            )
+            iteration_number = simpledialog.askinteger(title="Number of iterations", prompt="Enter number:")
+            print(f"number of iterations: {iteration_number}")
+            if iteration_number:
+                ProbeAction.logon_to_telnet(controller)
+                for _ in range(iteration_number):
+                    for aAngle, bAngle in angles:
+                        pyautogui.write('prbhty ph9,' + aAngle + ',' + bAngle, interval=0.05)
+                        pyautogui.hotkey('enter')
+                        time.sleep(7.5)
+                pyautogui.hotkey('alt', 'f4')
+                pyautogui.hotkey('enter')

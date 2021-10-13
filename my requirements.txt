@@ -1,0 +1,15 @@
+PyAutoGUI~=0.9.52
+PyPDF2~=1.26.0
+openpyxl~=3.0.6
+selenium~=3.141.0
+gspread~=3.7.0
+oauth2client~=4.1.3
+requests~=2.25.1
+urllib3~=1.26.3
+
+pywin32 for win32print
+Pyrebase 5 for pyrebase
+python-docx for docx
+shutil
+tkinter.messagebox
+
