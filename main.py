@@ -7,6 +7,9 @@ from tkinter import *
 import tkinter.messagebox
 from tkinter import ttk
 
+import time
+import subprocess
+
 # from Adafruit_IO import Client
 import pyautogui
 import win32print  # install pywin32 for this module. Used to change default printer
@@ -454,7 +457,12 @@ def version():
 
 
 def testo():
-    pass
+    os.chdir("C:/servicedea/hyperterminal/")
+    # os.startfile("C:/servicedea/hyperterminal/hypertrm.exe DefCOM1")
+    os.startfile("C:/servicedea/hyperterminal/ShortcutCOM1")
+    # subprocess.run("C:/servicedea/hyperterminal/ShortcutCOM1")
+    # subprocess.run(["hypertrm.exe", "DefCOM1"])
+
 
 
 pyautogui.FAILSAFE = False

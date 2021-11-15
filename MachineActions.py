@@ -12,14 +12,14 @@ class MachineAction:
 
     @staticmethod
     def logon_to_telnet(controller):
-        time.sleep(0.2)
+        time.sleep(0.25)
         if controller == 'DC':
             os.startfile("C:\\Users\\Public\\Desktop\\DesktopFDC\\Controller.lnk")
         if controller == 'CC':
             os.startfile("C:/servicedea/hyperterminal/ShortcutCOM1")
         if controller == "CC_Hyper":
             os.startfile("C:/servicedea/hyperterminal/CC_Hyper")
-        time.sleep(0.25)
+        time.sleep(1)
         pyautogui.hotkey('ctrl', 'e')
         time.sleep(0.1)
         pyautogui.hotkey('ctrl', 'c')
