@@ -156,7 +156,6 @@ class CalConfig:
                         os.remove(os.path.join(dir_name, item))
                 if dir_name == "c:/PCDMISW/PCDDATA":
                     if item.lower() in constants.pcddata_delete_list or item.lower().endswith(".qiq"):
-                        print("------found--------")
                         os.remove(os.path.join(dir_name, item))
                 if dir_name == "c:/DeaReport/dataexport":
                     if item.lower().endswith(".pdf") or item.lower().endswith(".hrp") or item.lower().endswith(".mdb"):
