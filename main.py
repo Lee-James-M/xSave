@@ -756,7 +756,7 @@ lb_machine_label.pack()
 lb_machine_button = Button(frame2, text="Press to select machine type", command=select_machine_type)
 lb_machine_button.config(height=1, width=26)
 lb_machine_button.pack()
-space1_label = Label(frame2, text=" ").pack()
+Label(frame2, text=" ").pack()
 lb_dc = Listbox(frame2, width=26, height=3, selectmode=SINGLE)  # create a controller listbox
 lb_dc.insert(1, "DC Controller")
 lb_dc.insert(2, "CC Controller")
@@ -768,7 +768,7 @@ lb_controller_type_label.pack()
 lb_dc_button = Button(frame2, text="Press to select controller type", command=select_controller)
 lb_dc_button.config(height=1, width=26)
 lb_dc_button.pack()
-space2_label = Label(frame2, text=" ").pack()
+Label(frame2, text=" ").pack()
 
 lb_pcdmis = Listbox(frame2, width=26, height=3, selectmode=SINGLE)  # create  pcdmis list box
 lb_pcdmis_count = 1
@@ -781,7 +781,7 @@ lb_pcdmis_label.pack()
 lb_pcdmis_button = Button(frame2, text="Press to select PCDMIS version", command=select_pcdmis_ver)
 lb_pcdmis_button.config(height=1, width=26)
 lb_pcdmis_button.pack()
-space3_label = Label(frame2, text=" ").pack()
+Label(frame2, text=" ").pack()
 
 config_Button = Button(frame2, text="Show Current Config", command=show_current_config)
 config_Button.config(height=1, width=26, padx=25)
