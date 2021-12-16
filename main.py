@@ -20,6 +20,7 @@ import Email_funcs
 import Customer
 import scsGenerator as Scs
 import Diag
+import adj
 
 import constants
 
@@ -148,6 +149,10 @@ def uncert_en():
 # NEW - use const and dc xml for serial number, check with user if correct and then copy to folder. if not correct then
 # display entry, check is an int and, find adj's and copy over
 def adj_move():
+    # adj_files = adj.get_adj_files()
+    # for file in adj_files:
+    #     shutil.copy(f'C:/Users/lee.maloney/OneDrive - Hexagon/Deps_xSave/AUTOTUNE_DATA_DC_V05.5/{file}',
+    #                 cal_config.get_autotune_dir())
     if cal_config.model != " ":
         if cal_config.get_autotune_dir() != "":
             print(cal_config.get_autotune_dir())
