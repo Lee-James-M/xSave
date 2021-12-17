@@ -169,8 +169,8 @@ def adj_move():
                 if adj:
                     adjs = os.listdir(adj_fold)
                     print(f'items in adj_fold are: {adjs}, get_autotune_dir() is {cal_config.get_autotune_dir()}')
-                    for adj in adjs:
-                        shutil.copy(adj_fold + adj, cal_config.get_autotune_dir())  # at is autotune directory
+                    for adj_file in adjs:
+                        shutil.copy(adj_fold + adj_file, cal_config.get_autotune_dir())  # at is autotune directory
                     notifier_label.config(text="Adj Import Finished")
                 else:
                     tkinter.messagebox.showwarning("Error",
