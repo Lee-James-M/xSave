@@ -20,7 +20,7 @@ import Email_funcs
 import Customer
 import scsGenerator as Scs
 import Diag
-import adj
+# import adj
 
 import constants
 
