@@ -48,19 +48,19 @@ class ControllerAction:
         driver.get("http://100.0.0.1")
         driver.maximize_window()
         # Log-in
-        time.sleep(3.5)
+        time.sleep(3.0)
         try:
             driver.find_element_by_id("login_PassText").send_keys("hexmet")
-            time.sleep(1.0)
+            time.sleep(0.5)
         except ElementNotInteractableException:
             driver.find_element_by_id("errorButton1").click()
-            time.sleep(1.5)
+            time.sleep(0.5)
             driver.find_element_by_id("login_PassText").send_keys("hexmet")
-            time.sleep(1.0)
+            time.sleep(0.5)
         driver.find_element_by_id("login_BtnLogin").click()
-        time.sleep(1.5)
+        time.sleep(1.0)
         driver.find_element_by_link_text('Errors History').click()
-        time.sleep(1.5)
+        time.sleep(1.0)
         try:
             driver.find_element_by_xpath('//*[@id="Button3"]').click()
         except ElementNotInteractableException as e:

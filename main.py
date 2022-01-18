@@ -741,7 +741,7 @@ scs_btn = Button(frame1, text="Generate Service Check Sheet", command=scs_gen)
 scs_btn.config(height=1, width=28)
 scs_btn.grid(row=20, column=4)
 
-# ADAFRUIT_IO_KEY = "aio_dIrE34HA1VNhlHSr31QEFQw51nem"
+# ADAFRUIT_IO_KEY = ""
 # ADAFRUIT_IO_USERNAME = 'LeeJm'
 # aio = Client(ADAFRUIT_IO_USERNAME, ADAFRUIT_IO_KEY)
 
