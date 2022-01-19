@@ -423,6 +423,8 @@ class Diagnostics:
         if not self.scan_report_cust_data() and self.model != 'empty' and self.isomac_exists:
             print("\n--ALERT-- Customer Data in ISO1036004INFO.txt may not match the current customer and may result "
                   "in an incorrect -4 pdf report being generated.")
+            self.alert.append("\n--ALERT-- Customer Data in ISO1036004INFO.txt may not match the current customer and "
+                              "may result in an incorrect -4 pdf report being generated.")
             os.startfile('C:/PCDMISW/iso10360-4/ISO103604INFO.TXT')
         print("\n------------Analysis Complete-------------")
         self.generate_report_document()
@@ -437,3 +439,4 @@ class Diagnostics:
         with open(f'C:/Users/lee.maloney/diagnostic_report.txt', 'w+') as f:
             for alert in self.alert:
                 f.write(alert + '\n')
+        os.startfile('C:/Users/lee.maloney/diagnostic_report.txt')
