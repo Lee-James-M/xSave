@@ -66,7 +66,7 @@ class Diagnostics:
         self.alert = []
 
     def detect_pcdmis_versions(self):
-        find_list_pcdmis = ["2017", "2018", "2019", "2020", "2021"]
+        find_list_pcdmis = ["2017", "2018", "2019", "2020", "2021", "2022"]
         for item in os.listdir("C:/Program Files/Hexagon/"):
             for _file in find_list_pcdmis:
                 if _file in item:
@@ -275,7 +275,7 @@ class Diagnostics:
                 probe_type = f.readlines()
                 self.probe = probe_type[4].strip('\n')
                 print(f'self.probe is: {self.probe}')
-                scan_probe_list = ['sp25', 'sp600', 'x1', 'hh-p-x1c', 'lsp-x1', 'lsp-x1h', 'x3', 'x5']
+                scan_probe_list = ['sp25', 'sp600', 'x1', 'hh-p-x1c', 'lsp-x1', 'lsp-x1h', 'x3', 'x5', 'hp-s']
                 # put self.probe in a list
                 if any(substring in self.probe.lower() for substring in scan_probe_list):
                     scanning = True
@@ -423,6 +423,7 @@ class Diagnostics:
         if not self.scan_report_cust_data() and self.model != 'empty' and self.isomac_exists:
             print("\n--ALERT-- Customer Data in ISO1036004INFO.txt may not match the current customer and may result "
                   "in an incorrect -4 pdf report being generated.")
+            os.startfile('C:/PCDMISW/iso10360-4/ISO103604INFO.TXT')
         print("\n------------Analysis Complete-------------")
         self.generate_report_document()
 
@@ -432,7 +433,7 @@ class Diagnostics:
         # os.startfile(diagnostic_report)
 
     def generate_report_document(self):
-        open('diagnostic_report', "w+")
+        # open('diagnostic_report', "w+")
         with open(f'C:/Users/lee.maloney/diagnostic_report.txt', 'w+') as f:
             for alert in self.alert:
                 f.write(alert + '\n')
