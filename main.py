@@ -153,6 +153,7 @@ def adj_move():
     # for file in adj_files:
     #     shutil.copy(f'C:/Users/lee.maloney/OneDrive - Hexagon/Deps_xSave/AUTOTUNE_DATA_DC_V05.5/{file}',
     #                 cal_config.get_autotune_dir())
+    adjs_transfered = []
     if cal_config.model != " ":
         if cal_config.get_autotune_dir() != "":
             print(cal_config.get_autotune_dir())
@@ -171,7 +172,10 @@ def adj_move():
                     print(f'items in adj_fold are: {adjs}, get_autotune_dir() is {cal_config.get_autotune_dir()}')
                     for adj_file in adjs:
                         shutil.copy(adj_fold + adj_file, cal_config.get_autotune_dir())  # at is autotune directory
+                        adjs_transfered.append(adj_file)
                     notifier_label.config(text="Adj Import Finished")
+                    tkinter.messagebox.showinfo('ADJ Transfer', f"ADJ's {adjs_transfered} moved to "
+                                                                f"{cal_config.get_autotune_dir()}")
                 else:
                     tkinter.messagebox.showwarning("Error",
                                                    "Incorrect machine type match to serial number or serial number "

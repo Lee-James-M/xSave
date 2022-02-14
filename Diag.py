@@ -265,8 +265,7 @@ class Diagnostics:
                 else:
                     return False
 
-    def scan_report_cust_data(self):
-        # todo check if scanning probe
+    def check_if_scanning_probe(self):
         # check if probe is a scanning probe
         scanning = False
         iso10360_4_text_list = []
@@ -420,7 +419,7 @@ class Diagnostics:
                 # if self.gcomp_temp_comp:
             else:
                 print('\n--Note-- No Serv file detected.')
-        if not self.scan_report_cust_data() and self.model != 'empty' and self.isomac_exists:
+        if not self.check_if_scanning_probe() and self.model != 'empty' and self.isomac_exists:
             print("\n--ALERT-- Customer Data in ISO1036004INFO.txt may not match the current customer and may result "
                   "in an incorrect -4 pdf report being generated.")
             self.alert.append("\n--ALERT-- Customer Data in ISO1036004INFO.txt may not match the current customer and "

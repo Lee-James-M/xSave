@@ -131,10 +131,12 @@ def generate(last_generated_datasave):
         s29 = format_state(state.get("S29").strip('""'))
         if s29 == "CC or Older":
             n29 = "It is highly recommended that the customer considers the age of the controller and equipment on " \
-                  "this CMM. Support for this controller type is soon to be withdrawn and as such would leave the " \
-                  "customer at risk if the controller fails and parts are not available. "
+                  "this CMM. Support for this controller has been withdrawn and as such would leave the customer at " \
+                  "risk if the controller fails and parts are not available. "
         if s29 == "DC240":
-            n29 = "DC240 obsolescence details"
+            n29 = "It is highly recommended that the customer considers the age of the controller and equipment on " \
+                  "this CMM. Support for this controller has been withdrawn and as such would leave the customer at " \
+                  "risk if the controller fails and parts are not available. "
 
         notes = ("Customer reminded that machine accuracy may change with temperature.\n"
                  "Machine data files backed up locally in datasave folder and with Hexagon.\n"
@@ -192,7 +194,7 @@ def generate(last_generated_datasave):
 
         customer, cmm = customer_data()
         # Create table and set heading
-        table = doc.add_table(rows=5, cols=2)
+        table = doc.add_table(rows=4, cols=2)
         row = table.rows[0]
         row.cells[0].text = 'CUSTOMER:'
         row.cells[1].text = customer
