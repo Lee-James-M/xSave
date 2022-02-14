@@ -16,6 +16,7 @@ autotunedc_ext_delete_list = ["adjtest1.txt", "adjtest2.txt", "adjtest3.txt", "a
 
 machine_adj_list = (
     ('global a', 'GLOA'),
+    ('global aa', 'GLOAA'),
     ('global b', 'GLOB'),
     ('global c', 'GLOC'),
     ('global d', 'GLOD'),
