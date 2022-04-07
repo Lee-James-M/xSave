@@ -153,7 +153,7 @@ def adj_move():
     # for file in adj_files:
     #     shutil.copy(f'C:/Users/lee.maloney/OneDrive - Hexagon/Deps_xSave/AUTOTUNE_DATA_DC_V05.5/{file}',
     #                 cal_config.get_autotune_dir())
-    adjs_transfered = []
+    adjs_transferred = []
     if cal_config.model != " ":
         if cal_config.get_autotune_dir() != "":
             print(cal_config.get_autotune_dir())
@@ -172,9 +172,9 @@ def adj_move():
                     print(f'items in adj_fold are: {adjs}, get_autotune_dir() is {cal_config.get_autotune_dir()}')
                     for adj_file in adjs:
                         shutil.copy(adj_fold + adj_file, cal_config.get_autotune_dir())  # at is autotune directory
-                        adjs_transfered.append(adj_file)
+                        adjs_transferred.append(adj_file)
                     notifier_label.config(text="Adj Import Finished")
-                    tkinter.messagebox.showinfo('ADJ Transfer', f"ADJ's {adjs_transfered} moved to "
+                    tkinter.messagebox.showinfo('ADJ Transfer', f"ADJ's {adjs_transferred} moved to "
                                                                 f"{cal_config.get_autotune_dir()}")
                 else:
                     tkinter.messagebox.showwarning("Error",
@@ -197,9 +197,9 @@ def insert_recall_name():
 
 
 def open_geotools():
-    os.chdir(f"C:\\Users\\{os.getlogin()}\\OneDrive - Hexagon\\Profile\\Downloads\\Geotools_v13.1")
-    os.startfile(f"C:\\Users\\{os.getlogin()}\\OneDrive - Hexagon\\Profile\\Downloads\\Geotools_v13.1\\"
-                 "Geotools_v13.1")
+    os.chdir(f"C:\\Users\\{os.getlogin()}\\OneDrive - Hexagon\\Profile\\Downloads\\GeoComp13_3")
+    os.startfile(f"C:\\Users\\{os.getlogin()}\\OneDrive - Hexagon\\Profile\\Downloads\\GeoComp13_3\\"
+                 "GeoComp13_3")
 
 
 def gen_map_code():
@@ -483,10 +483,10 @@ customer = Customer.Customer()
 
 deps_location = constants.dependencies_location
 
-# importing a Tkinter class, this creates a blank window. Its a constructor class. root is our main tkinter object.
+# importing a Tkinter class, this creates a blank window. It's a constructor class. Root is our main tkinter object.
 root = Tk()
 root.iconbitmap(os.path.join(deps_location, 'Icons/hexIcon.ico'))
-root.title("xSave")
+root.title("Prism")
 
 # ------------------------------------------------------------------------
 menubar = Menu(root)
