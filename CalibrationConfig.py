@@ -10,7 +10,7 @@ deps = constants.dependencies_location
 
 class CalConfig:
     # Add temp comp bool?
-    def __init__(self, model, serial_number, pcdmis_version, controller, zip_filename, datasave_path, backup_name,
+    def __init__(self, model, serial_number, controller, zip_filename, datasave_path, backup_name,
                  user_name, password, autotune_dir):
         self.model = model
         self.serial_number = serial_number
@@ -20,7 +20,6 @@ class CalConfig:
         self.backup_name = backup_name
         self.user_name = user_name
         self.password = password
-        self.pcdmis_version = pcdmis_version
         self.autotune_dir = autotune_dir
         self.autotune_fold_name = ''
         # read last saved config and pull in the data
@@ -41,15 +40,6 @@ class CalConfig:
 
     def get_serial_number(self):
         return self.serial_number
-
-    def set_pcdmis_version(self, pcdmis_ver):
-        self.pcdmis_version = pcdmis_ver
-
-    def get_pcdmis_directory(self):
-        return f'C:/Program Files/Hexagon/{self.pcdmis_version}/'
-
-    def get_pcdmis_version(self):
-        return self.pcdmis_version
 
     def set_datasave_path_name(self, path_name, backup_name):
         self.datasave_path = path_name
@@ -100,7 +90,6 @@ class CalConfig:
         self.zip_filename = ws.cell(row=2, column=2).value
         self.model = ws.cell(row=5, column=2).value
         self.controller = ws.cell(row=6, column=2).value
-        self.pcdmis_version = ws.cell(row=7, column=2).value
         self.serial_number = ws.cell(row=8, column=2).value
         self.user_name = ws.cell(row=10, column=2).value
         self.password = ws.cell(row=11, column=2).value
@@ -167,14 +156,24 @@ class CalConfig:
                     if item.lower().endswith("siq") or item.lower().endswith(".pdf"):
                         os.remove(os.path.join(dir_name, item))
 
-    # @staticmethod
-    # def run_dc_creacos():
-    #     if "AutotuneDC" in os.listdir("C:/"):
-    #         os.chdir("C:/AutotuneDC/")
-    #         os.startfile("c:\\AutotuneDC\\Creacos.exe")
-    #     if "autotunedc" in os.listdir("C:/"):
-    #         os.chdir("C:/autotunedc/")
-    #         os.startfile("c:\\autotunedc\\Creacos.exe")
+    @staticmethod
+    def disable_uncertainty():
+        with open('C:/Program Files (x86)/DeaReport/ATReport.ini', 'r') as file:
+            uncertainty_ini_file = file.readlines()
+        uncertainty_ini_file[2] = 'DisabilitaIncertezza=1\n'
+        with open('C:/Program Files (x86)/DeaReport/ATReport.ini', 'w') as file:
+            file.writelines(uncertainty_ini_file)
+
+    @staticmethod
+    def enable_uncertainty():
+        with open('C:/Program Files (x86)/DeaReport/ATReport.ini', 'r') as file:
+            uncertainty_ini_file = file.readlines()
+        uncertainty_ini_file[2] = 'DisabilitaIncertezza=0\n'
+        with open('C:/Program Files (x86)/DeaReport/ATReport.ini', 'w') as file:
+            file.writelines(uncertainty_ini_file)
+
+    # remove redundant if item.lower() == "serv.stp": and use a try catch with a file not found exception.
+    #  Refactor with propper names for sizes.
 
     def copy_serv_file(self):
         atdir = os.listdir(self.get_autotune_dir())

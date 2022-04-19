@@ -3,6 +3,7 @@
 
 import datetime
 # import time  # For sleep function
+# import os
 from tkinter import *
 import tkinter.messagebox
 from tkinter import ttk
@@ -23,6 +24,7 @@ import Diag
 # import adj
 
 import constants
+
 
 # import smtplib
 # from email.mime.text import MIMEText
@@ -69,16 +71,6 @@ def select_controller():
     show_current_config()
 
 
-# Sets listbox label for pcdmis type and saves the selection to the DsName .xlsx.
-def select_pcdmis_ver():
-    das = lb_pcdmis.curselection()
-    for item in das:
-        cal_config.set_pcdmis_version(lb_pcdmis.get(item))
-        lb_pcdmis_label.config(text="PCDMIS set to: " + cal_config.get_pcdmis_version(), fg="green")
-        cal_config.put_detail_into_workbook(location='b7', detail=str(cal_config.get_pcdmis_version()))
-    show_current_config()
-
-
 # Sets listbox label for controller type. DC or CC. And saves the selection to the DsName .xlsx.
 def select_machine_type():
     das = lb_machinetype.curselection()
@@ -91,7 +83,7 @@ def select_machine_type():
 
 
 def show_current_config():
-    config_label.config(text=cal_config.model + ", " + cal_config.controller + ", " + cal_config.pcdmis_version)
+    config_label.config(text=cal_config.model + ", " + cal_config.controller)
 
 
 def run_cc_creacos():
@@ -109,37 +101,28 @@ def run_dc_creacos():
 
 
 def set_interfac_to_leitz():
-    pcdmis = cal_config.get_pcdmis_directory()
-    path = os.path.exists(pcdmis)
-    if path:
-        shutil.copyfile(pcdmis + "leitz.dll", pcdmis + "interfac.dll")
-        notifier_label.config(text="Leitz Interfac Finished")
-    else:
-        tkinter.messagebox.showerror(title='Interfac', message="Path does not exist for Selected Pcdmis version.")
+    pcdmis_program_location = 'C:/Program Files/Hexagon/'
+    for pcdmis_dir in os.listdir(pcdmis_program_location):
+        if 'pc-dmis' in pcdmis_dir.lower() and 'help' not in pcdmis_dir.lower():
+            try:
+                shutil.copyfile(pcdmis_program_location + pcdmis_dir + "/leitz.dll",
+                                pcdmis_program_location + pcdmis_dir + "/interfac.dll")
+            except Exception as e:
+                tkinter.messagebox.showwarning('PCDMIS Error', f'The Leitz.dll was not found in one or more PCDMIS '
+                                                               f'directories.\n {e}')
 
 
 def set_interfac_to_dc():
-    pcdmis = cal_config.get_pcdmis_directory()
-    path = os.path.exists(pcdmis)
-    if path:
-        shutil.copyfile(pcdmis + "FDC.dll", pcdmis + "interfac.dll")
-        notifier_label.config(text="FDC Interfac Finished")
-    else:
-        tkinter.messagebox.showerror(title='Interfac', message="Path does not exist for Selected Pcdmis version.")
-
-
-# Disables uncertainty, uses unCertDisabled string variable pointing to disabled version in Dependencies.
-def uncert_dis():
-    uncertainty_disabled = os.path.join(deps_location, "Uncertainty/ATReport_wo_un.ini")
-    shutil.copyfile(uncertainty_disabled, "C:\\Program Files (x86)\\DeaReport\\" + "ATReport.ini")
-    notifier_label.config(text="Uncert Disabled Finished")
-
-
-# Enables uncertainty, uses unCertDisabled string variable pointing to enabled version in Dependencies.
-def uncert_en():
-    uncertainty_enabled = os.path.join(deps_location, "Uncertainty/ATReport.ini")
-    shutil.copyfile(uncertainty_enabled, "C:\\Program Files (x86)\\DeaReport\\" + "ATReport.ini")
-    notifier_label.config(text="Uncert Enabled Finished")
+    pcdmis_program_location = 'C:/Program Files/Hexagon/'
+    for pcdmis_dir in os.listdir(pcdmis_program_location):
+        if 'pc-dmis' in pcdmis_dir.lower() and 'help' not in pcdmis_dir.lower():
+            print(pcdmis_dir)
+            try:
+                shutil.copyfile(pcdmis_program_location + pcdmis_dir + "/FDC.dll",
+                                pcdmis_program_location + pcdmis_dir + "/interfac.dll")
+            except Exception as e:
+                tkinter.messagebox.showwarning('PCDMIS Error', f'The FDC.dll was not found in one or more PCDMIS '
+                                                               f'directories.\n {e}')
 
 
 # checks if controller and machine type are selected and checks if corresponding adj folder is present in Dependencies
@@ -191,7 +174,7 @@ def adj_move():
         tkinter.messagebox.showwarning("Error", "Machine type not selected")
 
 
-def insert_recall_name():
+def recall_last_backup_name():
     name_recall = cal_config.get_backup_name()
     fold_name_recall_label.config(text=name_recall)
 
@@ -432,6 +415,8 @@ def cc_controller_temps():
 
 def activate_motors():
     pass
+
+
 #     # feeds = aio.feeds()
 #     motorsOn = aio.feeds('motors-on')
 #     # motorsOnData = aio.receive(motorsOn.key)
@@ -463,16 +448,17 @@ def version():
 
 
 def testo():
-    os.chdir("C:/servicedea/hyperterminal/")
+    pass
+    # os.chdir("C:/servicedea/hyperterminal/")
     # os.startfile("C:/servicedea/hyperterminal/hypertrm.exe DefCOM1")
-    os.startfile("C:/servicedea/hyperterminal/ShortcutCOM1")
+    # os.startfile("C:/servicedea/hyperterminal/ShortcutCOM1")
     # subprocess.run("C:/servicedea/hyperterminal/ShortcutCOM1")
     # subprocess.run(["hypertrm.exe", "DefCOM1"])
 
 
 pyautogui.FAILSAFE = False
 
-cal_config = CalConfig('', '', '', '', '', '', '', '', '', '')
+cal_config = CalConfig('', '', '', '', '', '', '', '', '')
 diagnostics = Diag.Diagnostics(cal_config, "", "", "", "", "", "", "", "", "", "", "", "")
 probe_action = ProbeActions.ProbeAction()
 machine_action = MachineActions.MachineAction()
@@ -639,10 +625,10 @@ leitz_interfac_button.grid(row=3, column=1)
 dc_interfac_button = Button(frame1, text="  DC - Set Interfac to FDC", command=set_interfac_to_dc, anchor=W)
 dc_interfac_button.config(height=1, width=22)
 dc_interfac_button.grid(row=3, column=2)
-uncert_en_button = Button(frame1, text="  Enable Uncertainty", command=uncert_en, anchor=W)
+uncert_en_button = Button(frame1, text="  Enable Uncertainty", command=cal_config.enable_uncertainty, anchor=W)
 uncert_en_button.config(height=1, width=22)
 uncert_en_button.grid(row=4, column=1)
-uncert_dis_button = Button(frame1, text="  Disable Uncertainty", command=uncert_dis, anchor=W)
+uncert_dis_button = Button(frame1, text="  Disable Uncertainty", command=cal_config.disable_uncertainty, anchor=W)
 uncert_dis_button.config(height=1, width=22)
 uncert_dis_button.grid(row=4, column=2)
 serial_entry = Entry(frame1)  # create an entry that requires manual input of serial number
@@ -674,7 +660,7 @@ run_dc_autotune_btn.grid(row=13, column=2)
 company_entry = Entry(frame1)  # Enter machine_location_size
 company_entry.grid(row=16, column=1)
 
-fold_name_recall_btn = Button(frame1, text="  Recall Last Name", command=insert_recall_name, anchor=W)
+fold_name_recall_btn = Button(frame1, text="  Recall Last Name", command=recall_last_backup_name, anchor=W)
 fold_name_recall_btn.config(height=1, width=22)
 fold_name_recall_btn.grid(row=15, column=2)
 
@@ -787,9 +773,6 @@ for ver in constants.pcdmis_versions:
 lb_pcdmis.pack()
 lb_pcdmis_label = Label(frame2, text="Pcdmis version not yet selected")
 lb_pcdmis_label.pack()
-lb_pcdmis_button = Button(frame2, text="Press to select PCDMIS version", command=select_pcdmis_ver)
-lb_pcdmis_button.config(height=1, width=26)
-lb_pcdmis_button.pack()
 Label(frame2, text=" ").pack()
 
 config_Button = Button(frame2, text="Show Current Config", command=show_current_config)
