@@ -9,7 +9,7 @@ from selenium import webdriver
 # from email.mime.text import MIMEText
 # from email import encoders
 import tkinter.messagebox
-from Customer import *
+from Customer import Customer
 from openpyxl import load_workbook
 import win32com.client
 from selenium.common.exceptions import ElementNotInteractableException
@@ -81,8 +81,8 @@ class Email:
     #         server.quit()
     #         print("server quit")
 
-    @staticmethod
-    def send_zipped_backup_email(email_recipient):
+    @classmethod
+    def send_zipped_backup_email(cls, email_recipient):
         wb = load_workbook(filename=os.path.join(deps, 'Details/DsName.xlsx'))
         ws = wb.active
         print('values below are from workbook load')
@@ -126,8 +126,8 @@ class Email:
                 print(f'exception is {ex}')
             print("end of function")
 
-    @staticmethod
-    def get_and_email_fdc_code():
+    @classmethod
+    def get_and_email_fdc_code(cls):
         get_code = tkinter.messagebox.askyesno("Map code", "Get map code from controller")
         if get_code:
             driver = webdriver.Chrome(executable_path=os.path.join(deps, 'chromedriver_win32/chromedriver.exe'))

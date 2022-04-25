@@ -2,8 +2,8 @@
 # 3rd commit
 
 import datetime
-# import time  # For sleep function
-# import os
+import os
+import shutil
 from tkinter import *
 import tkinter.messagebox
 from tkinter import ttk
@@ -12,13 +12,15 @@ from tkinter import ttk
 import pyautogui
 import win32print  # install pywin32 for this module. Used to change default printer
 
-from CalibrationConfig import *
+from CalibrationConfigNew import CalConfig2
+import test
+from CalibrationConfig import CalConfig
 import MachineActions
 import ControllerActions
-import ProbeActions
+from ProbeActions import ProbeHead
 import Datasave
-import Email_funcs
-import Customer
+from Email_funcs import Email
+from Customer import Customer
 import scsGenerator as Scs
 import Diag
 # import adj
@@ -50,8 +52,8 @@ def clear_last_config_and_files():
     delete_all_files = tkinter.messagebox.askyesno("Clear Cal Files", "Are you sure you want to delete all files "
                                                                       "associated with last calibration?")
     if delete_all_files:
-        cal_config.clean_all_working_dirs()
-        cal_config.clear_workbook_details()
+        CalConfig.clear_last_cal_files()
+        CalConfig.clear_workbook_details()
         cal_config.load_workbook_details_to_calconfig_object()
         notifier_label.config(text="Clear files finished")
         lb_controller_type_label.config(text="Controller type not yet selected", fg="black")  # reset button text & col.
@@ -101,18 +103,20 @@ def run_dc_creacos():
 
 
 def set_interfac_to_leitz():
+    print('running interfac')
     pcdmis_program_location = 'C:/Program Files/Hexagon/'
     for pcdmis_dir in os.listdir(pcdmis_program_location):
         if 'pc-dmis' in pcdmis_dir.lower() and 'help' not in pcdmis_dir.lower():
             try:
                 shutil.copyfile(pcdmis_program_location + pcdmis_dir + "/leitz.dll",
                                 pcdmis_program_location + pcdmis_dir + "/interfac.dll")
-            except Exception as e:
+            except FileNotFoundError as e:
                 tkinter.messagebox.showwarning('PCDMIS Error', f'The Leitz.dll was not found in one or more PCDMIS '
-                                                               f'directories.\n {e}')
+                                                               f'directories.\n\n {e}')
 
 
 def set_interfac_to_dc():
+    print('running interfac')
     pcdmis_program_location = 'C:/Program Files/Hexagon/'
     for pcdmis_dir in os.listdir(pcdmis_program_location):
         if 'pc-dmis' in pcdmis_dir.lower() and 'help' not in pcdmis_dir.lower():
@@ -120,9 +124,9 @@ def set_interfac_to_dc():
             try:
                 shutil.copyfile(pcdmis_program_location + pcdmis_dir + "/FDC.dll",
                                 pcdmis_program_location + pcdmis_dir + "/interfac.dll")
-            except Exception as e:
+            except FileNotFoundError as e:
                 tkinter.messagebox.showwarning('PCDMIS Error', f'The FDC.dll was not found in one or more PCDMIS '
-                                                               f'directories.\n {e}')
+                                                               f'directories.\n\n {e}')
 
 
 # checks if controller and machine type are selected and checks if corresponding adj folder is present in Dependencies
@@ -186,7 +190,7 @@ def open_geotools():
 
 
 def gen_map_code():
-    email_func.get_and_email_fdc_code()
+    Email.get_and_email_fdc_code()
 
 
 # Finds serv.stp file based on controller type listbox selection. May need capitals for DC
@@ -238,7 +242,7 @@ def gen_datasave_directory_name():
     date_time = datetime.datetime.now().strftime("%d%m%Y")
     company_and_location = company_entry.get()
     isinstance(company_and_location, str)
-    backup_name = f'{company_and_location}_{cal_config.get_model()}_{customer.get_customer_machine_size()}_' \
+    backup_name = f'{company_and_location}_{cal_config.get_model()}_{Customer.get_customer_machine_size()}_' \
                   f'{cal_config.get_serial_number()}_{str(date_time)}\\'
     print(f'backup name is {backup_name}')
     datasave_dir = (f'C:\\Users\\{os.getlogin()}\\OneDrive - Hexagon\\CalCerts and Health checks\\'
@@ -279,12 +283,12 @@ def cpy_mdb():
 
 
 # Copies a blank cal label and service check sheet.
-def cal_lab_gen():
+def generate_cal_label():
     datasave.generate_cal_label(cal_config)
 
 
 # send datasave file name to generate function in the imported SCSModule(as Scs).
-def scs_gen():
+def generate_service_checksheet():
     Scs.generate(cal_config.get_datasave_path_name())
 
 
@@ -305,10 +309,10 @@ def send_zip_to_me():
 
 
 def send_zip(email_recipient):
-    email_func.send_zipped_backup_email(email_recipient)
+    Email.send_zipped_backup_email(email_recipient)
 
 
-def openfdc():
+def logon_to_fdc():
     controller_action.open_fdc()
 
 
@@ -358,19 +362,19 @@ def update_aid_combobox():
 
 
 def rotate_head_90_0():
-    probe_action.rotate_probe_head(90, 0, cal_config.get_controller_type())
+    ProbeHead.rotate_head(90, 0, cal_config.get_controller_type())
 
 
 def rotate_head_90_180():
-    probe_action.rotate_probe_head(90, 180, cal_config.get_controller_type())
+    ProbeHead.rotate_head(90, 180, cal_config.get_controller_type())
 
 
 def rotate_head_0_0():
-    probe_action.rotate_probe_head(0, 0, cal_config.get_controller_type())
+    ProbeHead.rotate_head(0, 0, cal_config.get_controller_type())
 
 
 def probe_head_test_seq():
-    probe_action.run_probe_head_test_seq(cal_config.get_controller_type())
+    ProbeHead.run_test_seq(cal_config.get_controller_type())
 
 
 def send_machine_front():
@@ -417,16 +421,6 @@ def activate_motors():
     pass
 
 
-#     # feeds = aio.feeds()
-#     motorsOn = aio.feeds('motors-on')
-#     # motorsOnData = aio.receive(motorsOn.key)
-#     aio.send_data(motorsOn.key, "static")
-#     aio.send_data(motorsOn.key, "1")
-#     time.sleep(5)
-#     aio.send_data(motorsOn.key, "static")
-#     print("Motors on command sent")
-
-
 def config_hide():
     frame2.pack_forget()
 
@@ -448,24 +442,17 @@ def version():
 
 
 def testo():
-    pass
-    # os.chdir("C:/servicedea/hyperterminal/")
-    # os.startfile("C:/servicedea/hyperterminal/hypertrm.exe DefCOM1")
-    # os.startfile("C:/servicedea/hyperterminal/ShortcutCOM1")
-    # subprocess.run("C:/servicedea/hyperterminal/ShortcutCOM1")
-    # subprocess.run(["hypertrm.exe", "DefCOM1"])
+    test.print_controller()
+    print('')
 
 
 pyautogui.FAILSAFE = False
 
-cal_config = CalConfig('', '', '', '', '', '', '', '', '')
+cal_config = CalConfig('', '', '', '', '', '', '')
 diagnostics = Diag.Diagnostics(cal_config, "", "", "", "", "", "", "", "", "", "", "", "")
-probe_action = ProbeActions.ProbeAction()
 machine_action = MachineActions.MachineAction()
 controller_action = ControllerActions.ControllerAction()
 datasave = Datasave.Datasave()
-email_func = Email_funcs.Email()
-customer = Customer.Customer()
 
 deps_location = constants.dependencies_location
 
@@ -625,10 +612,10 @@ leitz_interfac_button.grid(row=3, column=1)
 dc_interfac_button = Button(frame1, text="  DC - Set Interfac to FDC", command=set_interfac_to_dc, anchor=W)
 dc_interfac_button.config(height=1, width=22)
 dc_interfac_button.grid(row=3, column=2)
-uncert_en_button = Button(frame1, text="  Enable Uncertainty", command=cal_config.enable_uncertainty, anchor=W)
+uncert_en_button = Button(frame1, text="  Enable Uncertainty", command=CalConfig.enable_uncertainty, anchor=W)
 uncert_en_button.config(height=1, width=22)
 uncert_en_button.grid(row=4, column=1)
-uncert_dis_button = Button(frame1, text="  Disable Uncertainty", command=cal_config.disable_uncertainty, anchor=W)
+uncert_dis_button = Button(frame1, text="  Disable Uncertainty", command=CalConfig.disable_uncertainty, anchor=W)
 uncert_dis_button.config(height=1, width=22)
 uncert_dis_button.grid(row=4, column=2)
 serial_entry = Entry(frame1)  # create an entry that requires manual input of serial number
@@ -676,7 +663,7 @@ scan_button.grid(row=18, column=1)
 mdb_button = Button(frame1, text="  Copy last mdb File", command=cpy_mdb, anchor=W)
 mdb_button.config(height=1, width=22)
 mdb_button.grid(row=19, column=1)
-cal_label_button = Button(frame1, text="  Generate Cal Label", command=cal_lab_gen, anchor=W)
+cal_label_button = Button(frame1, text="  Generate Cal Label", command=generate_cal_label, anchor=W)
 cal_label_button.config(height=1, width=22)
 cal_label_button.grid(row=20, column=1)
 conv_pdf_btn = Button(frame1, text="  Convert Files to PDF", command=convert_2pdf, anchor=W)
@@ -699,7 +686,7 @@ testo_btn.config(height=1, width=22)
 testo_btn.grid(row=25, column=1)
 
 # Right hand side functions
-fdc_btn = Button(frame1, text="Open FDC Panel - I.P = 100.0.0.1", fg="purple", command=openfdc)
+fdc_btn = Button(frame1, text="Open FDC Panel - I.P = 100.0.0.1", fg="purple", command=logon_to_fdc)
 fdc_btn.config(height=1, width=28)
 fdc_btn.grid(row=1, column=4)
 openGeoTools_btn = Button(frame1, text="Open Geo-Tools for Part Programs", fg="purple", command=open_geotools)
@@ -727,7 +714,7 @@ service_aid_combo.grid(row=18, column=4)
 service_aid_btn = Button(frame1, text="Get selected documentation", command=get_documentation)
 service_aid_btn.config(height=1, width=28)
 service_aid_btn.grid(row=19, column=4)
-scs_btn = Button(frame1, text="Generate Service Check Sheet", command=scs_gen)
+scs_btn = Button(frame1, text="Generate Service Check Sheet", command=generate_service_checksheet)
 scs_btn.config(height=1, width=28)
 scs_btn.grid(row=20, column=4)
 

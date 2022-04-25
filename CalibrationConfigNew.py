@@ -8,95 +8,108 @@ import constants
 deps = constants.dependencies_location
 
 
-class CalConfig:
-    # Add temp comp bool?
-    def __init__(self, model, serial_number, controller, zip_filename, datasave_path, backup_name, autotune_dir):
-        self.model = model
-        self.serial_number = serial_number
-        self.controller = controller
-        self.zip_filename = zip_filename
-        self.datasave_path = datasave_path
-        self.backup_name = backup_name
-        self.autotune_dir = autotune_dir
-        self.autotune_fold_name = ''
-        # read last saved config and pull in the data
-        self.load_workbook_details_to_calconfig_object()
-        self.set_autotune_data()
+class CalConfig2:
+    model: str = ''
+    serial_number: str = ''
+    controller: str = ''
+    zip_filename: str = ''
+    datasave_path: str = ''
+    backup_name: str = ''
+    autotune_dir: str = ''
+    autotune_fold_name: str = ''
 
-    def about(self):
-        return print(f'Cal config is a {self.model}, with a {self.controller}, s.n:{self.serial_number}, \n datasave '
-                     f'located at {self.datasave_path}, \nZip filename is {self.zip_filename}')
+    # read last saved config and pull in the data
+    # run these two in main
+    # cls.load_workbook_details_to_calconfig_object()
+    # set_autotune_data()
 
-    def get_model(self):
-        return self.model
+    @classmethod
+    def about(cls):
+        return print(f'Cal config is a {cls.model}, with a {cls.controller}, s.n:{cls.serial_number}, \n datasave '
+                     f'located at {cls.datasave_path}, \nZip filename is {cls.zip_filename}')
 
-    def set_serial_number(self, serial_no):
-        self.serial_number = serial_no
-        self.put_detail_into_workbook(location='b8', detail=serial_no)
+    @classmethod
+    def get_model(cls) -> str:
+        return cls.model
 
-    def get_serial_number(self):
-        return self.serial_number
+    @classmethod
+    def set_serial_number(cls, serial_no):
+        cls.serial_number = serial_no
+        cls.put_detail_into_workbook(location='b8', detail=serial_no)
 
-    def set_datasave_path_name(self, path_name, backup_name):
-        self.datasave_path = path_name
-        self.backup_name = backup_name
-        print(f'datasave names are {self.datasave_path}, {self.backup_name}')
-        self.put_detail_into_workbook(location='b1', detail=str(path_name))
-        self.put_detail_into_workbook(location='b3', detail=str(backup_name))
+    @classmethod
+    def get_serial_number(cls):
+        return cls.serial_number
 
-    def get_datasave_path_name(self):
-        return self.datasave_path
+    @classmethod
+    def set_datasave_path_name(cls, path_name, backup_name):
+        cls.datasave_path = path_name
+        cls.backup_name = backup_name
+        print(f'datasave names are {cls.datasave_path}, {cls.backup_name}')
+        cls.put_detail_into_workbook(location='b1', detail=str(path_name))
+        cls.put_detail_into_workbook(location='b3', detail=str(backup_name))
 
-    def get_backup_name(self):
-        return self.backup_name
+    @classmethod
+    def get_datasave_path_name(cls):
+        return cls.datasave_path
 
-    def set_autotune_data(self):
-        if self.controller == 'CC Controller' or self.controller == "CC Controller_Hyper":
-            self.autotune_dir = 'c:/Autotune'
-            self.autotune_fold_name = 'Autotune'
-        if self.controller == 'DC Controller':
+    @classmethod
+    def get_backup_name(cls):
+        return cls.backup_name
+
+    @classmethod
+    def set_autotune_data(cls):
+        if cls.controller == 'CC Controller' or cls.controller == "CC Controller_Hyper":
+            cls.autotune_dir = 'c:/Autotune'
+            cls.autotune_fold_name = 'Autotune'
+        if cls.controller == 'DC Controller':
             if "AutotuneDC" in os.listdir("C:/"):
-                self.autotune_dir = 'c:/AutotuneDC'
-                self.autotune_fold_name = 'AutotuneDC'
+                cls.autotune_dir = 'c:/AutotuneDC'
+                cls.autotune_fold_name = 'AutotuneDC'
             if "autotunedc" in os.listdir("C:/"):
-                self.autotune_dir = 'c:/autotunedc'
-                self.autotune_fold_name = 'autotunedc'
+                cls.autotune_dir = 'c:/autotunedc'
+                cls.autotune_fold_name = 'autotunedc'
 
-    def get_autotune_dir(self):
-        self.set_autotune_data()
-        return self.autotune_dir
+    @classmethod
+    def get_autotune_dir(cls):
+        cls.set_autotune_data()
+        return cls.autotune_dir
 
-    def get_autotune_c_drive_folder_name(self):
-        self.set_autotune_data()
-        return self.autotune_fold_name
+    @classmethod
+    def get_autotune_c_drive_folder_name(cls):
+        cls.set_autotune_data()
+        return cls.autotune_fold_name
 
-    def get_controller_type(self):
-        if self.controller == 'CC Controller':
+    @classmethod
+    def get_controller_type(cls):
+        if cls.controller == 'CC Controller':
             return 'CC'
-        elif self.controller == "CC Controller_Hyper":
+        elif cls.controller == "CC Controller_Hyper":
             return "CC_Hyper"
-        elif self.controller == 'DC Controller':
+        elif cls.controller == 'DC Controller':
             return 'DC'
 
-    def load_workbook_details_to_calconfig_object(self):
+    @classmethod
+    def load_workbook_details_to_calconfig_object(cls):
         wb = load_workbook(filename=os.path.join(deps, 'Details/DsName.xlsx'))
         ws = wb.active
-        self.datasave_path = ws.cell(row=1, column=2).value
-        self.backup_name = ws.cell(row=3, column=2).value
-        self.zip_filename = ws.cell(row=2, column=2).value
-        self.model = ws.cell(row=5, column=2).value
-        self.controller = ws.cell(row=6, column=2).value
-        self.serial_number = ws.cell(row=8, column=2).value
-        self.set_autotune_data()
+        cls.datasave_path = ws.cell(row=1, column=2).value
+        cls.backup_name = ws.cell(row=3, column=2).value
+        cls.zip_filename = ws.cell(row=2, column=2).value
+        cls.model = ws.cell(row=5, column=2).value
+        cls.controller = ws.cell(row=6, column=2).value
+        cls.serial_number = ws.cell(row=8, column=2).value
+        cls.set_autotune_data()
         wb.close()
 
-    def put_detail_into_workbook(self, location, detail):
+    @classmethod
+    def put_detail_into_workbook(cls, location, detail):
         wb = load_workbook(filename=os.path.join(deps, 'Details/DsName.xlsx'))
         ws = wb.active
         ws[location] = str(detail)
         wb.save(os.path.join(deps, 'Details/DsName.xlsx'))
         wb.close()
-        self.load_workbook_details_to_calconfig_object()
+        cls.load_workbook_details_to_calconfig_object()
 
     @staticmethod
     def clear_workbook_details():
@@ -169,12 +182,13 @@ class CalConfig:
     # remove redundant if item.lower() == "serv.stp": and use a try catch with a file not found exception.
     #  Refactor with propper names for sizes.
 
-    def copy_serv_file(self):
-        atdir = os.listdir(self.get_autotune_dir())
+    @classmethod
+    def copy_serv_file(cls):
+        atdir = os.listdir(cls.get_autotune_dir())
         print(atdir)
         for item in atdir:
             if item.lower() == "serv.stp":
-                with open(os.path.join(self.get_autotune_dir(), item)) as f:
+                with open(os.path.join(cls.get_autotune_dir(), item)) as f:
                     for i in range(1, 8):
                         sizes = f.readline()
                     for i in range(1, 9):
@@ -194,8 +208,8 @@ class CalConfig:
                                                                                f'Do you want to copy'
                                                                                f' serv file to Thermal_OCX?')
                 if copy_serv:
-                    shutil.copyfile(os.path.join(self.get_autotune_dir(), item), "C:\\Program Files\\Thermal_ocx\\"
-                                                                                 "Serv1.Stp")
+                    shutil.copyfile(os.path.join(cls.get_autotune_dir(), item), "C:\\Program Files\\Thermal_ocx\\"
+                                                                                "Serv1.Stp")
                     print("Serv file copied dc")
                     os.startfile("C:\\Program Files\\Thermal_ocx")
         return sizes

@@ -1,4 +1,4 @@
-
+# uses ATReport to get customer data
 class Customer:
 
     def __init__(self):
@@ -13,14 +13,24 @@ class Customer:
             print("customer name is " + customer_name)
             return customer_name
 
-    @staticmethod
-    def get_customer_address():
+    # @staticmethod
+    # def get_customer_address():
+    #     with open("C:\\pcdmisw\\pcddata\\isocust.dat", "r") as f:
+    #         f.readline()
+    #         f.readline()
+    #         customer_address = f.readline()
+    #         customer_address = customer_address.rstrip("\n")
+    #         print("customer address is " + customer_address)
+    #         return customer_address
+
+    @classmethod
+    def get_customer_address(cls):
         with open("C:\\pcdmisw\\pcddata\\isocust.dat", "r") as f:
             f.readline()
             f.readline()
             customer_address = f.readline()
             customer_address = customer_address.rstrip("\n")
-            print("customer address is " + customer_address)
+            # print("customer address is " + customer_address)
             return customer_address
 
     @staticmethod

@@ -5,13 +5,13 @@ from tkinter import simpledialog
 import tkinter.messagebox
 
 
-class ProbeAction:
+class ProbeHead:
 
     def __init__(self):
         print('Probe Class Created')
 
-    @staticmethod
-    def logon_to_telnet(controller):
+    @classmethod
+    def logon_to_telnet(cls, controller):
         time.sleep(1)
         print(f'controller is set to:{controller}')
         if controller == 'DC':
@@ -36,21 +36,21 @@ class ProbeAction:
         pyautogui.hotkey('ctrl', 'b')
         time.sleep(0.1)
 
-    @staticmethod
-    def rotate_probe_head(a_angle, b_angle, controller):
+    @classmethod
+    def rotate_head(cls, a_angle, b_angle, controller):
         rot_head = tkinter.messagebox.askyesno("Rotate Head Command", f"Are you sure you want to rotate the head to "
                                                                       f"A{a_angle}, B{b_angle}?")
         if rot_head:
             print('probe head action recieved')
-            ProbeAction.logon_to_telnet(controller)
+            ProbeHead.logon_to_telnet(controller)
             pyautogui.write('prbhty ph9,' + str(a_angle) + ',' + str(b_angle), interval=0.05)
             pyautogui.hotkey('enter')
             time.sleep(5.0)
             pyautogui.hotkey('alt', 'f4')
             pyautogui.hotkey('enter')
 
-    @staticmethod
-    def run_probe_head_test_seq(controller):
+    @classmethod
+    def run_test_seq(cls, controller):
         rot_head = tkinter.messagebox.askyesno("Rotate Head Command", "Are you sure you want to run probe head test "
                                                                       "sequence?\nAngles of:\nA0B0,\nA30+-B30,"
                                                                       "\nA30+-B150, "
@@ -70,7 +70,7 @@ class ProbeAction:
             iteration_number = simpledialog.askinteger(title="Number of iterations", prompt="Enter number:")
             print(f"number of iterations: {iteration_number}")
             if iteration_number:
-                ProbeAction.logon_to_telnet(controller)
+                ProbeHead.logon_to_telnet(controller)
                 for _ in range(iteration_number):
                     for aAngle, bAngle in angles:
                         pyautogui.write('prbhty ph9,' + aAngle + ',' + bAngle, interval=0.05)
